@@ -23,6 +23,28 @@ export class ContactDao {
                     email: contact.data()['email'],
                     phone: contact.data()['phone'],
                     fullName: contact.data()['fullName'],
+                    uid: contact.data()['uid']
+                }
+                contacts.push(singleContact);
+            });
+            return contacts;
+        } catch (error) {
+            return undefined;
+        }
+    }
+
+    static async getAllUserContact(id: string): Promise<Contact[] | undefined> {
+        try {
+            let contacts: Contact[] = [];
+            const allContacts = (await db.collection('contacts').where('uid', "==", id).get()).docs;
+            allContacts.forEach(contact => {
+                let singleContact: Contact = {
+                    firstName: contact.data()['firstName'],
+                    lastName: contact.data()['lastName'],
+                    email: contact.data()['email'],
+                    phone: contact.data()['phone'],
+                    fullName: contact.data()['fullName'],
+                    uid: contact.data()['uid']
                 }
                 contacts.push(singleContact);
             });
@@ -41,6 +63,7 @@ export class ContactDao {
                 email: singleContact.data()!['email'],
                 phone: singleContact.data()!['phone'],
                 fullName: singleContact.data()!['fullName'],
+                uid:  singleContact.data()!['uid']
             }
             return contact;
         } catch (error) {
@@ -57,6 +80,7 @@ export class ContactDao {
                 email: singleContact.data()!['email'],
                 phone: singleContact.data()!['phone'],
                 fullName: singleContact.data()!['fullName'],
+                uid:  singleContact.data()!['uid'],
             }
             await db.collection('contacts').doc(id).delete();
             return contact;
